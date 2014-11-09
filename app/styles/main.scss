@@ -1,0 +1,19 @@
+//-- Main --//
+// bower:scss
+// endbower
+
+
+@import "base", "fontface";
+
+
+body {
+}
+a {
+  color: $c_primary;
+  text-decoration: underline;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+@import "social";
