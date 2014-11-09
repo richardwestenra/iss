@@ -369,7 +369,7 @@ module.exports = function (grunt) {
       },
       dist: {
         options: {
-          remote: 'git@github.com:richardwestenra/iss/.git',
+          remote: 'git@github.com:richardwestenra/iss.git',
           branch: 'gh-pages'
         }
       }
