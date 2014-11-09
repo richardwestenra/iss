@@ -42,24 +42,6 @@ html, body {
     margin: 0;
     padding: 0;
     @include sansSerif;
-    background: $c_bg;
-    -webkit-font-smoothing: antialiased;
-    font-smoothing: antialiased;
-}
-h1, h2, h3, h4, h5, h6 {
-    line-height: 1.1em;
-}
-li, p, blockquote {
-    line-height: 1.5em;
-}
-
-.wrapper {
-    width: 90%;
-    margin: 0 5%;
-    @media only screen and (min-width: $m_medium) {
-        width: $m_medium;
-        margin: 0 auto;
-    }
 }
 .browsehappy {
     margin: 0.2em 0;
@@ -67,9 +49,6 @@ li, p, blockquote {
     color: #000;
     padding: 1em 0;
     text-align: center;
-}
-* {
-    box-sizing: border-box;
 }
 
 

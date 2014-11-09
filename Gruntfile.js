@@ -369,7 +369,7 @@ module.exports = function (grunt) {
       },
       dist: {
         options: {
-          remote: 'git@github.com:richardwestenra/iss/.git',
+          remote: 'git@github.com:richardwestenra/iss.git',
           branch: 'gh-pages'
         }
       }
@@ -480,7 +480,7 @@ module.exports = function (grunt) {
     'cssmin',
     'uglify',
     'copy:dist',
-    'modernizr',
+    // 'modernizr',
     'rev',
     'usemin',
     'htmlmin',
@@ -501,7 +501,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', [
     'newer:jshint',
-    'test',
+    // 'test',
     'build'
   ]);
 };
