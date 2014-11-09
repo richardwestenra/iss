@@ -10,7 +10,6 @@ var D = document, W = window,
   ],
   h = window.location.hash.substr(1),
   ustream_id = (h && h.length > 0) ? h : ustream_ids[0];
-  console.log(h);
   window.location.hash = ustream_id;
   // ustream_iframe = '<iframe src="http://www.ustream.tv/embed/17074538?v=3&autoplay=true&locale=en_US&autoResize=true&enablejsapi=true&quality=best&volume=0.01" id="ustream"></iframe>';
 
