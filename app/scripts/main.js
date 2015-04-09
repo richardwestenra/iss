@@ -13,21 +13,19 @@ var D = document, W = window,
   window.location.hash = ustream_id;
   // ustream_iframe = '<iframe src="http://www.ustream.tv/embed/17074538?v=3&autoplay=true&locale=en_US&autoResize=true&enablejsapi=true&quality=best&volume=0.01" id="ustream"></iframe>';
 
-D.addEventListener('DOMContentLoaded',function(){
+$(function(){
   wrapper = $$("wrapper");
-  
   if (somafm = $$("somafm")) {
     somafm.pause();
     somafm.volume = .1;
     somafm.play();
   }
-
   init();
-
 });
+
+
 // Switch feed and reload on click:
-var sw = document.getElementById('switch');
-sw.addEventListener('click', function(e){
+$('switch').on('click', function(e){
   e.preventDefault();
   var isHdev = ustream_id === ustream_ids[0];
   ustream_id = isHdev ? ustream_ids[1] : ustream_ids[0];
@@ -128,7 +126,8 @@ function initMap() {
 
 function addMarker(location) {
   var latlng = new google.maps.LatLng(location.latitude, location.longitude);
-    image = {   url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAABNElEQVR4AVWRMWvCUBSFj9HXpyYhIhEnB0Ww7dBfII5CJ4cW2qUdHF7BXZAiCC0VOtlf0cWpk5N/oquLHZxtt069Pe01kJwjJHnnu+/ivcgod3CiTJSHgUWRtjD88tKgx6MSoqA2aT+fNOuowMcRIUX4MDyI38/FqTeDfgMhEU+BPKvj7QWjO5nJXEbi9rfDFgIU9A6D6L/6XrYi1KcsxH1cogpLgD8b1ITVjBN9y1jctMObPQIoTtoEZpLWq7hVF/4BmB8TeMoAS3HrXgLYZp3ASL4k0Y88iJufokyAMqhsBkQW7K3xm7jdFWIOLad/0+839jdExuy9lEe+uZczhDAKeBxJOGz9TUK9u2YcwTJJ9kAkQHXaWXXXPfaOETLWUStCtsCjEny6zN4muyyFiKnTK/8Fwa2dfmyRmmYAAAAASUVORK5CYII=',
+  image = {
+    url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAABNElEQVR4AVWRMWvCUBSFj9HXpyYhIhEnB0Ww7dBfII5CJ4cW2qUdHF7BXZAiCC0VOtlf0cWpk5N/oquLHZxtt069Pe01kJwjJHnnu+/ivcgod3CiTJSHgUWRtjD88tKgx6MSoqA2aT+fNOuowMcRIUX4MDyI38/FqTeDfgMhEU+BPKvj7QWjO5nJXEbi9rfDFgIU9A6D6L/6XrYi1KcsxH1cogpLgD8b1ITVjBN9y1jctMObPQIoTtoEZpLWq7hVF/4BmB8TeMoAS3HrXgLYZp3ASL4k0Y88iJufokyAMqhsBkQW7K3xm7jdFWIOLad/0+839jdExuy9lEe+uZczhDAKeBxJOGz9TUK9u2YcwTJJ9kAkQHXaWXXXPfaOETLWUStCtsCjEny6zN4muyyFiKnTK/8Fwa2dfmyRmmYAAAAASUVORK5CYII=',
     anchor: new google.maps.Point(0, 8)
   },
   marker = new google.maps.Marker({
@@ -139,6 +138,7 @@ function addMarker(location) {
 }
 
 function updateMarker(location) {
+  if (typeof location === 'undefined') return;
   if (!marker) addMarker(location);
   log('updating to: '+location.latitude+','+location.longitude);
   var latlng = new google.maps.LatLng(location.latitude, location.longitude);
@@ -147,6 +147,8 @@ function updateMarker(location) {
   nite.refresh();
 }
 
-function log(e){try{console.log(e)}catch(e){}}
+function log(e){
+  try{ console.log(e); } catch(e){}
+}
 
 /* jshint ignore: end */
