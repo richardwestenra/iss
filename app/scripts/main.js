@@ -3,7 +3,7 @@
 
 var D = document, W = window,
   somafm, vimeo, vimeo_player, ustream, ustream_player, wrapper, map, bounds, marker = false,
-  vimeo_iframe = '<iframe src="http://player.vimeo.com/video/95002726?autoplay=true&badge=0&byline=0&color=000000&loop=1&portrait=0&title=0&api=1&player_id=vimeo&hd=1" id="vimeo"></iframe>',
+  vimeo_iframe = '<iframe src="http://player.vimeo.com/video/95002726?html5ui=1&autoplay=true&badge=0&byline=0&color=000000&loop=1&portrait=0&title=0&api=1&player_id=vimeo&hd=1" id="vimeo"></iframe>',
   ustream_ids = [
     '17074538', // http://www.ustream.tv/channel/iss-hdev-payload
     '9408562' // http://www.ustream.tv/channel/live-iss-stream
@@ -35,7 +35,7 @@ $('switch').on('click', function(e){
 
 function init() {
 
-  var ustream_iframe = '<iframe src="http://www.ustream.tv/embed/'+ustream_id+'?v=3&autoplay=true&locale=en_US&autoResize=true&enablejsapi=true&quality=best&volume=0.01" id="ustream"></iframe>';
+  var ustream_iframe = '<iframe src="http://www.ustream.tv/embed/'+ustream_id+'?v=3&html5ui=1&autoplay=true&locale=en_US&autoResize=true&enablejsapi=true&quality=best&volume=0" id="ustream"></iframe>';
   wrapper.innerHTML = ustream_iframe;
   ustream = $$('ustream');
   ustream_player = UstreamEmbed('ustream');
