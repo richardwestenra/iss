@@ -2,7 +2,7 @@
 //--- Script from original ISS feed ---//
 
 var D = document, W = window,
-  somafm, vimeo, vimeo_player, ustream, ustream_player, wrapper, map, bounds, marker = false,
+  vimeo, vimeo_player, ustream, ustream_player, wrapper, map, bounds, marker = false,
   vimeo_iframe = '<iframe src="http://player.vimeo.com/video/95002726?html5ui=1&autoplay=true&badge=0&byline=0&color=000000&loop=1&portrait=0&title=0&api=1&player_id=vimeo&hd=1" id="vimeo"></iframe>',
   ustream_ids = [
     '17074538', // http://www.ustream.tv/channel/iss-hdev-payload
@@ -15,11 +15,6 @@ var D = document, W = window,
 
 $(function(){
   wrapper = $$("wrapper");
-  if (somafm = $$("somafm")) {
-    somafm.pause();
-    somafm.volume = .1;
-    somafm.play();
-  }
   init();
 });
 
