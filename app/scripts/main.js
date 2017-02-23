@@ -38,15 +38,19 @@ function init() {
   ustream_player.addListener('offline', offline);
   ustream_player.callMethod('quality', 16);
 
-  initMap();
+  if (window.location.search.substr(1) === 'map') {
+    initMap();
 
-  setInterval(function(){
-    ajax('http://sobolev.us/download/nasa/iss.php?'+Math.random()*1E18,function(str){
-    // ajax('https://api.wheretheiss.at/v1/satellites/25544',function(str){
-      var json = eval("(function(){return " + str + ";})()");
-      updateMarker(json);
-    });
-  },5555);
+    setInterval(function(){
+      // ajax('http://sobolev.us/download/nasa/iss.php?'+Math.random()*1E18,function(str){
+      ajax('https://api.wheretheiss.at/v1/satellites/25544',function(str){
+        var json = eval("(function(){return " + str + ";})()");
+        updateMarker(json);
+      });
+    },5555);
+  } else {
+    $$('map').remove();
+  }
 
 }
 
