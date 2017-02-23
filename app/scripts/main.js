@@ -42,8 +42,8 @@ function init() {
     initMap();
 
     setInterval(function(){
-      // ajax('http://sobolev.us/download/nasa/iss.php?'+Math.random()*1E18,function(str){
-      ajax('https://api.wheretheiss.at/v1/satellites/25544',function(str){
+      ajax('http://sobolev.us/download/nasa/iss.php?'+Math.random()*1E18,function(str){
+      // ajax('https://api.wheretheiss.at/v1/satellites/25544',function(str){
         var json = eval("(function(){return " + str + ";})()");
         updateMarker(json);
       });
