@@ -3,7 +3,7 @@
 
 var D = document, W = window,
   somafm, vimeo, vimeo_player, ustream, ustream_player, wrapper, map, bounds, marker = false,
-  vimeo_iframe = '<iframe src="https://player.vimeo.com/video/95002726?autoplay=true&badge=0&byline=0&color=000000&loop=1&portrait=0&title=0&api=1&player_id=vimeo&hd=1" id="vimeo"></iframe>',
+  vimeo_iframe = '<iframe src="https://player.vimeo.com/video/95002726?html5ui=1&autoplay=true&badge=0&byline=0&color=000000&loop=1&portrait=0&title=0&api=1&player_id=vimeo&hd=1" id="vimeo"></iframe>',
   ustream_ids = [
     '17074538', // http://www.ustream.tv/channel/iss-hdev-payload
     '9408562' // http://www.ustream.tv/channel/live-iss-stream
@@ -13,7 +13,7 @@ var D = document, W = window,
   window.location.hash = ustream_id;
   // ustream_iframe = '<iframe src="http://www.ustream.tv/embed/17074538?v=3&autoplay=true&locale=en_US&autoResize=true&enablejsapi=true&quality=best&volume=0.01" id="ustream"></iframe>';
 
-D.addEventListener('DOMContentLoaded',function(){
+$(function(){
   wrapper = $$("wrapper");
 
   if (somafm = $$("somafm")) {
@@ -21,13 +21,12 @@ D.addEventListener('DOMContentLoaded',function(){
     somafm.volume = .1;
     somafm.play();
   }
-
   init();
-
 });
+
+
 // Switch feed and reload on click:
-var sw = document.getElementById('switch');
-sw.addEventListener('click', function(e){
+$('switch').on('click', function(e){
   e.preventDefault();
   var isHdev = ustream_id === ustream_ids[0];
   ustream_id = isHdev ? ustream_ids[1] : ustream_ids[0];
@@ -37,7 +36,7 @@ sw.addEventListener('click', function(e){
 
 function init() {
 
-  var ustream_iframe = '<iframe src="https://www.ustream.tv/embed/'+ustream_id+'?v=3&autoplay=true&locale=en_US&autoResize=true&enablejsapi=true&quality=best&volume=0.01&html5ui" id="ustream"></iframe>';
+  var ustream_iframe = '<iframe src="https://www.ustream.tv/embed/'+ustream_id+'?v=3&html5ui=1&autoplay=true&locale=en_US&autoResize=true&enablejsapi=true&quality=best&volume=0" id="ustream"></iframe>';
   wrapper.innerHTML = ustream_iframe;
   ustream = $$('ustream');
   ustream_player = UstreamEmbed('ustream');
@@ -48,8 +47,8 @@ function init() {
   initMap();
 
   setInterval(function(){
-    //ajax('http://sobolev.us/download/nasa/iss.php?'+Math.random()*1E18,function(str){
-    ajax('https://api.wheretheiss.at/v1/satellites/25544',function(str){
+    ajax('http://sobolev.us/download/nasa/iss.php?'+Math.random()*1E18,function(str){
+    // ajax('https://api.wheretheiss.at/v1/satellites/25544',function(str){
       var json = eval("(function(){return " + str + ";})()");
       updateMarker(json);
     });
@@ -128,7 +127,8 @@ function initMap() {
 
 function addMarker(location) {
   var latlng = new google.maps.LatLng(location.latitude, location.longitude);
-    image = {   url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAABNElEQVR4AVWRMWvCUBSFj9HXpyYhIhEnB0Ww7dBfII5CJ4cW2qUdHF7BXZAiCC0VOtlf0cWpk5N/oquLHZxtt069Pe01kJwjJHnnu+/ivcgod3CiTJSHgUWRtjD88tKgx6MSoqA2aT+fNOuowMcRIUX4MDyI38/FqTeDfgMhEU+BPKvj7QWjO5nJXEbi9rfDFgIU9A6D6L/6XrYi1KcsxH1cogpLgD8b1ITVjBN9y1jctMObPQIoTtoEZpLWq7hVF/4BmB8TeMoAS3HrXgLYZp3ASL4k0Y88iJufokyAMqhsBkQW7K3xm7jdFWIOLad/0+839jdExuy9lEe+uZczhDAKeBxJOGz9TUK9u2YcwTJJ9kAkQHXaWXXXPfaOETLWUStCtsCjEny6zN4muyyFiKnTK/8Fwa2dfmyRmmYAAAAASUVORK5CYII=',
+  image = {
+    url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAABNElEQVR4AVWRMWvCUBSFj9HXpyYhIhEnB0Ww7dBfII5CJ4cW2qUdHF7BXZAiCC0VOtlf0cWpk5N/oquLHZxtt069Pe01kJwjJHnnu+/ivcgod3CiTJSHgUWRtjD88tKgx6MSoqA2aT+fNOuowMcRIUX4MDyI38/FqTeDfgMhEU+BPKvj7QWjO5nJXEbi9rfDFgIU9A6D6L/6XrYi1KcsxH1cogpLgD8b1ITVjBN9y1jctMObPQIoTtoEZpLWq7hVF/4BmB8TeMoAS3HrXgLYZp3ASL4k0Y88iJufokyAMqhsBkQW7K3xm7jdFWIOLad/0+839jdExuy9lEe+uZczhDAKeBxJOGz9TUK9u2YcwTJJ9kAkQHXaWXXXPfaOETLWUStCtsCjEny6zN4muyyFiKnTK/8Fwa2dfmyRmmYAAAAASUVORK5CYII=',
     anchor: new google.maps.Point(0, 8)
   },
   marker = new google.maps.Marker({
@@ -139,6 +139,7 @@ function addMarker(location) {
 }
 
 function updateMarker(location) {
+  if (typeof location === 'undefined') return;
   if (!marker) addMarker(location);
   log('updating to: '+location.latitude+','+location.longitude);
   var latlng = new google.maps.LatLng(location.latitude, location.longitude);
@@ -147,6 +148,8 @@ function updateMarker(location) {
   nite.refresh();
 }
 
-function log(e){try{console.log(e)}catch(e){}}
+function log(e){
+  try{ console.log(e); } catch(e){}
+}
 
 /* jshint ignore: end */
