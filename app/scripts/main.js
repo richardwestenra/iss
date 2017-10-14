@@ -37,7 +37,7 @@ sw.addEventListener('click', function(e){
 
 function init() {
 
-  var ustream_iframe = '<iframe src="https://www.ustream.tv/embed/'+ustream_id+'?v=3&autoplay=true&locale=en_US&autoResize=true&enablejsapi=true&quality=best&volume=0.01" id="ustream"></iframe>';
+  var ustream_iframe = '<iframe src="https://www.ustream.tv/embed/'+ustream_id+'?v=3&autoplay=true&locale=en_US&autoResize=true&enablejsapi=true&quality=best&volume=0.01&html5ui" id="ustream"></iframe>';
   wrapper.innerHTML = ustream_iframe;
   ustream = $$('ustream');
   ustream_player = UstreamEmbed('ustream');
