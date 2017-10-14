@@ -3,7 +3,7 @@
 
 var D = document, W = window,
   somafm, vimeo, vimeo_player, ustream, ustream_player, wrapper, map, bounds, marker = false,
-  vimeo_iframe = '<iframe src="http://player.vimeo.com/video/95002726?autoplay=true&badge=0&byline=0&color=000000&loop=1&portrait=0&title=0&api=1&player_id=vimeo&hd=1" id="vimeo"></iframe>',
+  vimeo_iframe = '<iframe src="https://player.vimeo.com/video/95002726?autoplay=true&badge=0&byline=0&color=000000&loop=1&portrait=0&title=0&api=1&player_id=vimeo&hd=1" id="vimeo"></iframe>',
   ustream_ids = [
     '17074538', // http://www.ustream.tv/channel/iss-hdev-payload
     '9408562' // http://www.ustream.tv/channel/live-iss-stream
@@ -15,7 +15,7 @@ var D = document, W = window,
 
 D.addEventListener('DOMContentLoaded',function(){
   wrapper = $$("wrapper");
-  
+
   if (somafm = $$("somafm")) {
     somafm.pause();
     somafm.volume = .1;
@@ -36,17 +36,17 @@ sw.addEventListener('click', function(e){
 });
 
 function init() {
-  
-  var ustream_iframe = '<iframe src="http://www.ustream.tv/embed/'+ustream_id+'?v=3&autoplay=true&locale=en_US&autoResize=true&enablejsapi=true&quality=best&volume=0.01" id="ustream"></iframe>';
+
+  var ustream_iframe = '<iframe src="https://www.ustream.tv/embed/'+ustream_id+'?v=3&autoplay=true&locale=en_US&autoResize=true&enablejsapi=true&quality=best&volume=0.01" id="ustream"></iframe>';
   wrapper.innerHTML = ustream_iframe;
   ustream = $$('ustream');
   ustream_player = UstreamEmbed('ustream');
   ustream_player.addListener('live', live);
   ustream_player.addListener('offline', offline);
   ustream_player.callMethod('quality', 16);
-  
+
   initMap();
-  
+
   setInterval(function(){
     //ajax('http://sobolev.us/download/nasa/iss.php?'+Math.random()*1E18,function(str){
     ajax('https://api.wheretheiss.at/v1/satellites/25544',function(str){
@@ -96,7 +96,7 @@ function ajax(url, callback) {
     x.send();
   } else {
     x = new XMLHttpRequest();
-    x.onreadystatechange = function() { 
+    x.onreadystatechange = function() {
       if (x.readyState == 4 && x.status == 200) callback(x.responseText);
     }
     x.open("GET", url, true);
@@ -121,7 +121,7 @@ function initMap() {
     style = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];
 
   map = new google.maps.Map($$("map"), settings);
-  
+
   map.setOptions({styles: style});
   nite.init(map);
 };
