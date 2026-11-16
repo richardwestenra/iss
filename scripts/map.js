@@ -1,85 +1,18 @@
 /* jshint ignore: start */
 //--- Script from original ISS feed ---//
 
-var D = document, W = window,
-  somafm, vimeo, vimeo_player, ustream, ustream_player, wrapper, map, bounds, marker = false,
-  vimeo_iframe = '<iframe src="https://player.vimeo.com/video/95002726?html5ui=1&autoplay=true&badge=0&byline=0&color=000000&loop=1&portrait=0&title=0&api=1&player_id=vimeo&hd=1" id="vimeo"></iframe>',
-  ustream_ids = [
-    '17074538', // http://www.ustream.tv/channel/iss-hdev-payload
-    '9408562' // http://www.ustream.tv/channel/live-iss-stream
-  ],
-  h = window.location.hash.substr(1),
-  ustream_id = (h && h.length > 0) ? h : ustream_ids[0];
-  window.location.hash = ustream_id;
-  // ustream_iframe = '<iframe src="http://www.ustream.tv/embed/17074538?v=3&autoplay=true&locale=en_US&autoResize=true&enablejsapi=true&quality=best&volume=0.01" id="ustream"></iframe>';
+var D = document, W = window, map, marker = false;
 
-$(function(){
-  wrapper = $$("wrapper");
+initMap();
 
-  if (somafm = $$("somafm")) {
-    somafm.pause();
-    somafm.volume = .1;
-    somafm.play();
-  }
-  init();
-});
-
-
-// Switch feed and reload on click:
-$('switch').on('click', function(e){
-  e.preventDefault();
-  var isHdev = ustream_id === ustream_ids[0];
-  ustream_id = isHdev ? ustream_ids[1] : ustream_ids[0];
-  window.location.hash = ustream_id;
-  document.location.reload(false);
-});
-
-function init() {
-
-  var ustream_iframe = '<iframe src="https://www.ustream.tv/embed/'+ustream_id+'?v=3&html5ui=1&autoplay=true&locale=en_US&autoResize=true&enablejsapi=true&quality=best&volume=0" id="ustream"></iframe>';
-  wrapper.innerHTML = ustream_iframe;
-  ustream = $$('ustream');
-  ustream_player = UstreamEmbed('ustream');
-  ustream_player.addListener('live', live);
-  ustream_player.addListener('offline', offline);
-  ustream_player.callMethod('quality', 16);
-
-  initMap();
-
-  setInterval(function(){
-    ajax('http://sobolev.us/download/nasa/iss.php?'+Math.random()*1E18,function(str){
-    // ajax('https://api.wheretheiss.at/v1/satellites/25544',function(str){
-      var json = eval("(function(){return " + str + ";})()");
-      updateMarker(json);
-    });
-  },5555);
-
-}
-
-function offline() {
-  R("vimeo");
-  wrapper.innerHTML += vimeo_iframe;
-  ustream.className = 'hide';
-  vimeo = $$("vimeo");
-  vimeo_player = $f(vimeo);
-  vimeo_player.addEvent('ready',function(){
-    vimeo_player.api('setVolume', 0);
+setInterval(function(){
+  ajax('http://sobolev.us/download/nasa/iss.php?'+Math.random()*1E18,function(str){
+  // ajax('https://api.wheretheiss.at/v1/satellites/25544',function(str){
+    var json = eval("(function(){return " + str + ";})()");
+    updateMarker(json);
   });
+},5555);
 
-  log('Offline');
-}
-function live() {
-  ustream_player.callMethod('play');
-  log('Live');
-}
-function playing() {
-  log('Playing');
-}
-
-function R(id){
-  var n = G(id);
-  n.parentElement.removeChild(n);
-};
 function $$(id) {
   return D.getElementById(id);
 };
@@ -141,15 +74,11 @@ function addMarker(location) {
 function updateMarker(location) {
   if (typeof location === 'undefined') return;
   if (!marker) addMarker(location);
-  log('updating to: '+location.latitude+','+location.longitude);
+  console.log('updating to: '+location.latitude+','+location.longitude);
   var latlng = new google.maps.LatLng(location.latitude, location.longitude);
   marker.setPosition(latlng);
   map.setCenter(latlng);
   nite.refresh();
-}
-
-function log(e){
-  try{ console.log(e); } catch(e){}
 }
 
 /* jshint ignore: end */
