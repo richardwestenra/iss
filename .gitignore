@@ -1,9 +1,2 @@
 node_modules
-dist
-.tmp
-.sass-cache
-bower_components
-.ftpauth
-zips
-*.sublime-project
-*.sublime-workspace
+.DS_Store
