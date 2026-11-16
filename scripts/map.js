@@ -1,84 +1,52 @@
-/* jshint ignore: start */
-//--- Script from original ISS feed ---//
+(() => {
+  'use strict';
 
-var D = document, W = window, map, marker = false;
+  const POSITION_URL = 'https://api.wheretheiss.at/v1/satellites/25544';
+  const POLL_MS = 5000; // API allows ~1 request/second, so this is well clear
 
-initMap();
-
-setInterval(function(){
-  ajax('http://sobolev.us/download/nasa/iss.php?'+Math.random()*1E18,function(str){
-  // ajax('https://api.wheretheiss.at/v1/satellites/25544',function(str){
-    var json = eval("(function(){return " + str + ";})()");
-    updateMarker(json);
+  const map = L.map('map', {
+    center: [0, 0],
+    zoom: 1,
+    zoomControl: false,
+    dragging: false,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+    boxZoom: false,
+    keyboard: false,
+    touchZoom: false,
   });
-},5555);
+  map.attributionControl.setPrefix(false);
 
-function $$(id) {
-  return D.getElementById(id);
-};
+  // NASA imagery needs no API key, unlike most free tile providers these days
+  L.tileLayer('https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg', {
+    attribution: 'Imagery: <a href="https://www.earthdata.nasa.gov/gibs">NASA GIBS</a>',
+    maxNativeZoom: 8,
+  }).addTo(map);
 
-function ajax(url, callback) {
-  var x, d = 0, callback = callback || function(){};
-  if (W.XDomainRequest) {
-    x = new XDomainRequest();
-    x.onerror = function() {};
-    x.onprogress = function() {};
-    x.onload = callback(x.responseText);
-    x.open("GET", url);
-    x.send();
-  } else {
-    x = new XMLHttpRequest();
-    x.onreadystatechange = function() {
-      if (x.readyState == 4 && x.status == 200) callback(x.responseText);
+  const night = L.terminator({ stroke: false, fillColor: '#000', fillOpacity: 0.35 }).addTo(map);
+  let marker;
+
+  updatePosition();
+
+  async function updatePosition() {
+    try {
+      const response = await fetch(POSITION_URL, { signal: AbortSignal.timeout(POLL_MS) });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const { latitude, longitude } = await response.json();
+      showPosition([latitude, longitude]);
+    } catch (error) {
+      console.warn('Could not fetch ISS position', error);
     }
-    x.open("GET", url, true);
-    x.send();
+    // Chained rather than setInterval so slow responses never pile up
+    setTimeout(updatePosition, POLL_MS);
   }
-}
 
-function initMap() {
-  var settings = {
-      zoom: 1,
-      scrollwheel: false,
-      navigationControl: false,
-      scaleControl: false,
-      streetViewControl: false,
-      draggable: false,
-      mapTypeControl: false,
-      panControl: false,
-      zoomControl: false,
-      zoomControlOptions: { style: google.maps.ZoomControlStyle.SMALL },
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    },
-    style = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];
-
-  map = new google.maps.Map($$("map"), settings);
-
-  map.setOptions({styles: style});
-  nite.init(map);
-};
-
-function addMarker(location) {
-  var latlng = new google.maps.LatLng(location.latitude, location.longitude);
-  image = {
-    url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAABNElEQVR4AVWRMWvCUBSFj9HXpyYhIhEnB0Ww7dBfII5CJ4cW2qUdHF7BXZAiCC0VOtlf0cWpk5N/oquLHZxtt069Pe01kJwjJHnnu+/ivcgod3CiTJSHgUWRtjD88tKgx6MSoqA2aT+fNOuowMcRIUX4MDyI38/FqTeDfgMhEU+BPKvj7QWjO5nJXEbi9rfDFgIU9A6D6L/6XrYi1KcsxH1cogpLgD8b1ITVjBN9y1jctMObPQIoTtoEZpLWq7hVF/4BmB8TeMoAS3HrXgLYZp3ASL4k0Y88iJufokyAMqhsBkQW7K3xm7jdFWIOLad/0+839jdExuy9lEe+uZczhDAKeBxJOGz9TUK9u2YcwTJJ9kAkQHXaWXXXPfaOETLWUStCtsCjEny6zN4muyyFiKnTK/8Fwa2dfmyRmmYAAAAASUVORK5CYII=',
-    anchor: new google.maps.Point(0, 8)
-  },
-  marker = new google.maps.Marker({
-    position: latlng,
-    map: map,
-    icon: image
-  });
-}
-
-function updateMarker(location) {
-  if (typeof location === 'undefined') return;
-  if (!marker) addMarker(location);
-  console.log('updating to: '+location.latitude+','+location.longitude);
-  var latlng = new google.maps.LatLng(location.latitude, location.longitude);
-  marker.setPosition(latlng);
-  map.setCenter(latlng);
-  nite.refresh();
-}
-
-/* jshint ignore: end */
+  function showPosition(latlng) {
+    if (!marker) {
+      marker = L.circleMarker(latlng, { radius: 6, color: '#fff', weight: 2, fill: false, interactive: false }).addTo(map);
+    }
+    marker.setLatLng(latlng);
+    map.setView(latlng, map.getZoom(), { animate: false });
+    night.setTime();
+  }
+})();

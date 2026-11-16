@@ -59,9 +59,20 @@ body {
   background: #000;
 }
 
-a[href*="terms_maps.html"],
-img[src*="http://maps.gstatic.com/mapfiles/api-3/"] {
-  display: none !important;
+#map.leaflet-container {
+  background: #000;
+}
+
+/* Keep the required tile credit, just quieter */
+#map .leaflet-control-attribution {
+  background: rgba(0, 0, 0, 0.5);
+  color: #888;
+  font-size: 9px;
+  line-height: 1.4;
+
+  a {
+    color: inherit;
+  }
 }
 
 a {
